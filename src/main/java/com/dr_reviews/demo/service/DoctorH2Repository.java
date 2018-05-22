@@ -59,7 +59,7 @@ public class DoctorH2Repository implements DoctorRepository {
 
     }
 
-    @Override//TODO refactor this to not be repeated somehow
+    @Override
     public Doctor mapRow(ResultSet resultSet, int rowNum) throws SQLException {
         return setDoctorProperties(resultSet);
 
@@ -71,24 +71,23 @@ public class DoctorH2Repository implements DoctorRepository {
         doctor.setName(resultSet.getString(NAME_COLUMN));
         doctor.setAddress(resultSet.getString(ADDRESS_COLUMN));
         doctor.setCity(resultSet.getString(CITY_COLUMN));
+        doctor.setCity_id(resultSet.getInt(CITY_ID_COLUMN));
         doctor.setSpecialty(resultSet.getString(SPECIALTY_COLUMN));
+        doctor.setSpecialty_id(resultSet.getInt(SPECIALTY_ID_COLUMN));
         return doctor;
     }
 
-//    @Override
-//    public List<Doctor> findAll() {
-//        return jdbcTemplate.query("select * from doctors", new DoctorRowMapper());
-//    }
     @Override
     public Doctor findById(int id) {
 
-        String sql = "SELECT doctor_id, name, address, cities.name, specialties.name " +
-                "FROM doctors, cities, specialties " +
+        String sql =
+                "SELECT doctors.doctor_id, doctors.specialty_id, doctors.city_id, doctors.name, doctors.address, cities.name AS city, specialties.name AS specialty  " +
+                "FROM doctors " +
                 "LEFT JOIN specialties " +
                 "ON doctors.specialty_id = specialties.specialty_id " +
                 "LEFT JOIN cities " +
                 "ON doctors.city_id = cities.city_id " +
-                "where doctor_id=?";
+                "WHERE doctor_id=?";
         return jdbcTemplate.queryForObject(sql, new Object[] { id },
                 new BeanPropertyRowMapper<>(Doctor.class));
     }
@@ -121,24 +120,4 @@ public class DoctorH2Repository implements DoctorRepository {
         return jdbcTemplate.query(doctorSql, new Object[] {specialtyId, cityId}, new DoctorRowMapper());
 
     }
-
-    /*
-     * int return val is number of rows affected
-     */
-//    @Override
-//    public int insert(Doctor doctor) {
-//        String separator = ", ";
-//        String columnNames = NODE_ID_COLUMN + separator +
-//                DATA_ID_COLUMN + separator +
-//                EDGES_COLUMN + separator +
-//                MAKE_COLUMN + separator +
-//                MODEL_COLUMN + separator +
-//                TYPE_COLUMN + separator +
-//                PHONE_COLUMN + separator +
-//                NAME_COLUMN + separator;
-//
-//        String sql = "insert into doctors (" + columnNames +") " + "values(?,?,?,?,?,?,?,?)";
-//        return jdbcTemplate.update(sql, doctor.getDoctor_id(), doctor.getAddress(),
-//                doctor.getSpecialty_id(), doctor.getCity_id(), doctor.getName());
-//    }
 }

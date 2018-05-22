@@ -13,6 +13,14 @@ public class DoctorController {
     @Autowired
     DoctorRepository doctorRepository;
 
+    /**
+     * For recommendations to show users when they view another review of a doctor with the passed
+     * in city, state, and specialty. State is just to avoid getting the wrong city's results (i.e. Springfield is a city in many different states)
+     * @param specialtyName
+     * @param cityName
+     * @param state
+     * @return
+     */
     @RequestMapping(method = RequestMethod.GET, value = "/doctors")
     public List<Doctor> getDoctorsBySpecialtyAndCity(
             @RequestParam String specialtyName,
@@ -22,7 +30,7 @@ public class DoctorController {
     }
 
     @RequestMapping(method = RequestMethod.GET, value = "/doctors/{docId}")
-    public List<Doctor> getDoctorsById(@PathVariable Integer docId) {
-        return new ArrayList<>();
+    public Doctor getDoctorById(@PathVariable Integer docId) {
+        return doctorRepository.findById(docId);
     }
 }

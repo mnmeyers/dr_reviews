@@ -11,8 +11,10 @@ import java.util.Date;
 public class Review {
     @Id @GeneratedValue
     private Integer review_id;
+    private String doctor_name;
     private Integer doctor_id;
     private Integer author_id;
+    private String author_username;
     private String comment_body;
     private Integer rating;
     private Boolean is_active;
